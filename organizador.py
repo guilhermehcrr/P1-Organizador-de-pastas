@@ -34,3 +34,16 @@ class OrganizadorDownloads:
                 return tipo.capitalize()
         
         return "Outros"
+    
+    def criar_pastas_organizacao(self):
+        """Cria as pastas de organização se não existirem"""
+        pasta_organizada = self.pasta_downloads / "Arquivos_Organizados"
+        
+        for tipo in self.tipos_arquivo.keys():
+            pasta_tipo = pasta_organizada / tipo.capitalize()
+            pasta_tipo.mkdir(parents=True, exist_ok=True)
+        
+        # Pasta para arquivos sem categoria definida
+        (pasta_organizada / "Outros").mkdir(parents=True, exist_ok=True)
+        
+        return pasta_organizada
