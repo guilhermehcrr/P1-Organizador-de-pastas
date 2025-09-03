@@ -138,3 +138,29 @@ class OrganizadorDownloads:
         
         print("=" * 50)
         print("🎉 Organização concluída!")
+    
+    def main():
+    """Função principal - executa o organizador"""
+    print("🚀 ORGANIZADOR DE DOWNLOADS")
+    print("=" * 30)
+    
+    # Criar instância do organizador
+    organizador = OrganizadorDownloads()
+    
+    # Verificar se a pasta Downloads existe
+    print(f"📂 Pasta de Downloads: {organizador.pasta_downloads}")
+    
+    if not organizador.pasta_downloads.exists():
+        print("❌ Pasta Downloads não encontrada!")
+        return
+    
+    # Perguntar confirmação
+    resposta = input("\n🤔 Deseja organizar os arquivos da pasta Downloads? (s/n): ")
+    
+    if resposta.lower() in ['s', 'sim', 'y', 'yes']:
+        organizador.organizar_downloads()
+    else:
+        print("❌ Operação cancelada pelo usuário.")
+
+if __name__ == "__main__":
+    main()
