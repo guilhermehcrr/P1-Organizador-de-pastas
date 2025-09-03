@@ -47,3 +47,25 @@ class OrganizadorDownloads:
         (pasta_organizada / "Outros").mkdir(parents=True, exist_ok=True)
         
         return pasta_organizada
+    
+    import shutil
+import datetime
+
+    def mover_arquivo(self, arquivo_origem, pasta_destino):
+        """Move um arquivo para a pasta destino, evitando conflitos de nome"""
+        nome_arquivo = arquivo_origem.name
+        arquivo_destino = pasta_destino / nome_arquivo
+        
+        # Se já existe um arquivo com o mesmo nome, adiciona timestamp
+        if arquivo_destino.exists():
+            nome_base = arquivo_origem.stem
+            extensao = arquivo_origem.suffix
+            timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+            novo_nome = f"{nome_base}_{timestamp}{extensao}"
+            arquivo_destino = pasta_destino / novo_nome
+        
+        try:
+            shutil.move(str(arquivo_origem), str(arquivo_destino))
+            return True, arquivo_destino
+        except Exception as e:
+            return False, str(e)
