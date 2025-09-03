@@ -121,3 +121,20 @@ class OrganizadorDownloads:
         # Mostrar relatório final
         self.mostrar_relatorio(sucessos, erros, estatisticas, pasta_organizada)
     
+    def mostrar_relatorio(self, sucessos, erros, estatisticas, pasta_organizada):
+        """Mostra um relatório final da organização"""
+        print("=" * 50)
+        print("📊 RELATÓRIO DE ORGANIZAÇÃO")
+        print("=" * 50)
+        print(f"✅ Arquivos organizados: {sucessos}")
+        print(f"❌ Erros: {erros}")
+        print(f"📁 Pasta de destino: {pasta_organizada}")
+        print()
+        
+        if estatisticas:
+            print("📋 Arquivos por categoria:")
+            for tipo, quantidade in sorted(estatisticas.items()):
+                print(f"   {tipo}: {quantidade} arquivo(s)")
+        
+        print("=" * 50)
+        print("🎉 Organização concluída!")
