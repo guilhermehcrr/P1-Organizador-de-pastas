@@ -1,5 +1,7 @@
 import os
 from pathlib import Path
+import shutil
+import datetime
 
 class OrganizadorDownloads:
     def __init__(self, pasta_downloads=None):
@@ -48,8 +50,7 @@ class OrganizadorDownloads:
         
         return pasta_organizada
     
-    import shutil
-import datetime
+
 
     def mover_arquivo(self, arquivo_origem, pasta_destino):
         """Move um arquivo para a pasta destino, evitando conflitos de nome"""
@@ -69,3 +70,54 @@ import datetime
             return True, arquivo_destino
         except Exception as e:
             return False, str(e)
+        
+    def organizar_downloads(self, mostrar_progresso=True):
+        """Organiza todos os arquivos da pasta Downloads"""
+        
+        if not self.pasta_downloads.exists():
+            print(f"❌ Pasta {self.pasta_downloads} não encontrada!")
+            return
+        
+        # Criar estrutura de pastas
+        pasta_organizada = self.criar_pastas_organizacao()
+        
+        # Listar todos os arquivos (exceto pastas)
+        arquivos = [f for f in self.pasta_downloads.iterdir() 
+                   if f.is_file() and f.name != '.DS_Store']
+        
+        if not arquivos:
+            print("📁 Nenhum arquivo encontrado para organizar!")
+            return
+        
+        print(f"🔍 Encontrados {len(arquivos)} arquivo(s) para organizar...")
+        print("=" * 50)
+        
+        estatisticas = {}
+        sucessos = 0
+        erros = 0
+        
+        for arquivo in arquivos:
+            tipo_arquivo = self.identificar_tipo_arquivo(arquivo)
+            pasta_destino = pasta_organizada / tipo_arquivo
+            
+            if mostrar_progresso:
+                print(f"📄 {arquivo.name} → {tipo_arquivo}/")
+            
+            sucesso, resultado = self.mover_arquivo(arquivo, pasta_destino)
+            
+            if sucesso:
+                sucessos += 1
+                estatisticas[tipo_arquivo] = estatisticas.get(tipo_arquivo, 0) + 1
+                if mostrar_progresso:
+                    print(f"   ✅ Movido com sucesso!")
+            else:
+                erros += 1
+                if mostrar_progresso:
+                    print(f"   ❌ Erro: {resultado}")
+            
+            if mostrar_progresso:
+                print()
+        
+        # Mostrar relatório final
+        self.mostrar_relatorio(sucessos, erros, estatisticas, pasta_organizada)
+    
